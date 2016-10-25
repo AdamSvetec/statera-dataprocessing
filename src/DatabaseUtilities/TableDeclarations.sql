@@ -1,3 +1,5 @@
+DROP TABLE IF EXISTS stance, political_issue, vote, bill, contribution_pac_to_pol, contribution_corp_to_pac, contribution_corp_to_pol, pac, politician, political_party, corporation;
+
 CREATE TABLE corporation
 (
 id numeric(10),
@@ -51,7 +53,7 @@ corporation_id numeric(10),
 amount numeric(10),
 contribution_date date not null,
 primary key(id),
-foreign key(politician_id) references pac(id),
+foreign key(pac_id) references pac(id),
 foreign key(corporation_id) references corporation(id)
 );
 
@@ -64,7 +66,7 @@ amount numeric(10),
 contribution_date date not null,
 primary key(id),
 foreign key(politician_id) references politician(id),
-foreign key(corporation_id) references pac(id)
+foreign key(pac_id) references pac(id)
 );
 
 CREATE TABLE bill
@@ -99,5 +101,5 @@ pol_issue numeric(10),
 lean numeric(3),
 primary key(bill_id, pol_issue),
 foreign key(bill_id) references bill(id),
-foreign key(pol_issue) references pol_issue(id)
+foreign key(pol_issue) references political_issue(id)
 );
