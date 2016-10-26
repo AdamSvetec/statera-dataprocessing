@@ -6,7 +6,7 @@ read -p "Pulling on server: 's' or pushing from local: 'l'? " prompt
 
 if [ "$prompt" = "s" ]; then
     echo "Pulling data from govtrack: "
-    foldername="~/BulkData"
+    foldername="/home/ubuntu/BulkData"
     rsync_command="rsync -avz"
     basepath="govtrack.us::govtrackdata"
 
