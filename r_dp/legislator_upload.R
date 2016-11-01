@@ -2,10 +2,11 @@
 
 #Parse command line arguments to get filepath of legislators-historic.csv
 args = commandArgs(trailingOnly=TRUE)
-if(length(args) != 1){
-  stop("Filename of legislator data must be provided")
+if(length(args) != 2){
+  stop("Filename of legislator csv and database password must be provided")
 }
 filename = args[1]
+db.password = args[2]
 
 #Read in legislators table from file
 legislators = read.table(filename, header = TRUE, sep = ",", fill=TRUE)
@@ -38,3 +39,12 @@ years <- as.numeric(format(legislators$birthday, "%Y"))
 legislators <- legislators[years > 1900,]
 
 #tail(legislators, 5)
+
+#Open MariaDB connection
+library(RMySQL)
+
+#Testing functionality on 'test' database. works, now need to implement for actual dataprocessing database 
+#con <- dbConnect(RMySQL::MySQL(), dbname = "test", user = "root", password = db.password)
+#dbWriteTable(con, "politician", legislators, row.names = FALSE, overwrite = TRUE)
+#dbDisconnect(con)
+
