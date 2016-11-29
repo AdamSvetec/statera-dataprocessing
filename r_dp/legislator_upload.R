@@ -1,6 +1,9 @@
 #Data upload for legislator data from govTrack
 #Standard Environment cleansing
 rm(list=ls())
+#Connect to processing database and close connection on exit
+library(RMySQL)
+con <- dbConnect(RMySQL::MySQL(), group="data-processing")
 #Will use file specified in command line arguments or will use default:
 filename = '~/BulkData/legislators-historic.csv'
 
@@ -25,10 +28,7 @@ legislators <- legislators[legislators$opensecrets_id != "",]
 
 #tail(legislators, 5)
 
-library(RMySQL)
-
 #Upload legislators table to database
-con <- dbConnect(RMySQL::MySQL(), group="data-processing")
 dbWriteTable(conn=con, name="legislator_govtrack", value=legislators, row.names = FALSE, overwrite = TRUE)
-dbDisconnect(con)
 
+dbDisconnect(con)

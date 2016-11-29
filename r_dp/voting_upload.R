@@ -1,10 +1,15 @@
 #Used to upload voting record of each bill put before congress
-#Will use directory specified in command line arguments or will use ~/BulkData/votes
+#Standard Environment cleansing
+rm(list=ls())
+#Connect to processing database and close connection on exit
+library(RMySQL)
+con <- dbConnect(RMySQL::MySQL(), group="data-processing")
+#Will use directory specified in command line arguments or will use:
+foldername = '~/BulkData/votes'
 #Will recursively read all data.json files and add bill and voting records to the database
 
 #Parse command line arguments to get filepath of legislators-historic.csv
 args = commandArgs(trailingOnly=TRUE)
-foldername = '~/BulkData/votes'
 if(length(args) > 0){
   foldername = args[1]
 }
@@ -13,10 +18,8 @@ filenames <- list.files(foldername, pattern="*.json", full.names=TRUE, recursive
 
 #Used to import the voting records that use the json values
 library(rjson)
-library(RMySQL)
 
 #Establish database connection and clear bills table
-con <- dbConnect(RMySQL::MySQL(), group="data-processing")
 dbRemoveTable(conn=con, name="bill")
 dbRemoveTable(conn=con, name="vote")
 
@@ -56,12 +59,11 @@ for(filename in filenames){
   
   dbWriteTable(conn=con, name="vote", value=votes, row.names = FALSE, overwrite = FALSE, append = TRUE)
   
-  i = i + 1
-  if(i > 20){
+  #i = i + 1
+  #if(i > 20){
     #print("done")
-    dbDisconnect(con)
-    stop()
-  }
+    #dbDisconnect(con)
+    #stop()
+  #}
 }
-
 dbDisconnect(con)
