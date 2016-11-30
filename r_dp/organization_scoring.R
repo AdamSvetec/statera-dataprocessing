@@ -1,22 +1,24 @@
 #Scores each organization on each issue according to their contribution history
 #Standard Environment cleansing
 rm(list=ls())
+#Include shared header
+source("~/379SeniorProject/r_dp/shared.R")
 #Connect to processing database and close connection on exit
 library(RMySQL)
 con <- dbConnect(RMySQL::MySQL(),group="data-processing")
 
 #Get list of all organization's id's
-organizations <- dbGetQuery(con, "SELECT Id FROM organization;")
+organizations <- dbGetQuery(con, paste("SELECT Id FROM ",ORG_TBL_NAME,";",sep=""))
 #Get list of all issues to analyze
-issue_ids <- dbGetQuery(con, "SELECT Id FROM issue GROUP BY Id")
+issue_ids <- dbGetQuery(con, paste("SELECT Id FROM ",ISSUE_TBL_NAME," GROUP BY Id",sep=""))
 
 #Generates a score for a given organization and issue
 generate_score <- function(organization_id, issue_id){
   #Need lean of each politician they contributed to on this specific issue
   leans <- dbGetQuery(con, paste(
     "SELECT amount, score
-    FROM indiv_to_pol, pol_score
-    WHERE indiv_to_pol.org_id = ",organization_id," AND pol_score.issue_id = ",issue_id," AND indiv_to_pol.pol_id = pol_score.leg_id;",
+    FROM ",INDIV_TO_POL_TBL_NAME,", ",LEG_SCORE_TBL_NAME,"
+    WHERE ",INDIV_TO_POL_TBL_NAME,".org_id = ",organization_id," AND ",LEG_SCORE_TBL_NAME,".issue_id = ",issue_id," AND ",INDIV_TO_POL_TBL_NAME,".pol_id = ",LEG_SCORE_TBL_NAME,".leg_id;",
     sep=""))
   if(nrow(leans) == 0){
     return(0)
@@ -41,12 +43,12 @@ score_organization <- function(organization){
     org_scores[nrow(org_scores),"issue_id"] <- issue_id
     org_scores[nrow(org_scores),"score"] <- generate_score(organization['Id'], issue_id)
   }
-  dbWriteTable(conn=con, name="org_score", value=org_scores, row.names = FALSE, overwrite = FALSE, append = TRUE)
+  ignore <- dbWriteTable(conn=con, name=ORG_SCORE_TBL_NAME, value=org_scores, row.names = FALSE, overwrite = FALSE, append = TRUE)
 }
 
 #Delete the table before recalculating scores
-dbRemoveTable(con, name="org_score")
+ignore <- dbRemoveTable(con, name=ORG_SCORE_TBL_NAME)
 #For each organization, pass this row to score_organization()
-apply(organizations, 1, score_organization)
+ignore <- apply(organizations, 1, score_organization)
 
-dbDisconnect(con)
+ignore <- dbDisconnect(con)

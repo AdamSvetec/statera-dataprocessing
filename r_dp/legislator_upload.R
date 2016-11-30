@@ -1,6 +1,8 @@
 #Data upload for legislator data from govTrack
 #Standard Environment cleansing
 rm(list=ls())
+#Include shared header
+source("~/379SeniorProject/r_dp/shared.R")
 #Connect to processing database and close connection on exit
 library(RMySQL)
 con <- dbConnect(RMySQL::MySQL(), group="data-processing")
@@ -19,16 +21,10 @@ legislators = read.table(filename, header=TRUE, sep=",", quote="\"", fill=TRUE, 
 #Remove all unused columns
 legislators = subset(legislators, select = c(last_name, first_name, birthday, gender, type, state, district, party, bioguide_id, opensecrets_id))
 
-#Convert birthday strings to dates and remove all legislators born earlier than 1900
-legislators <- legislators[legislators$opensecrets_id != "",]
-#legislators$birthday <- as.Date(legislators$birthday)
-#legislators <- legislators[!is.na(legislators$birthday),]
-#years <- as.numeric(format(legislators$birthday, "%Y"))
-#legislators <- legislators[years > 1900,]
-
-#tail(legislators, 5)
+#Remove all legislators that do not have an opensecrets id
+#legislators <- legislators[legislators$opensecrets_id != "",]
 
 #Upload legislators table to database
-dbWriteTable(conn=con, name="legislator_govtrack", value=legislators, row.names = FALSE, overwrite = TRUE)
+ignore <- dbWriteTable(conn=con, name=LEG_GOVTRACK_TBL_NAME, value=legislators, row.names = FALSE, overwrite = TRUE)
 
-dbDisconnect(con)
+ignore <- dbDisconnect(con)

@@ -1,6 +1,8 @@
 #Script used to upload the issues that will be used for scoring
 #Standard Environment cleansing
 rm(list=ls())
+#Include shared header
+source("~/379SeniorProject/r_dp/shared.R")
 #Connect to processing database and close connection on exit
 library(RMySQL)
 con <- dbConnect(RMySQL::MySQL(), group="data-processing")
@@ -16,8 +18,8 @@ if(length(args) > 0){
 #Read in issues from file specified
 issues <- read.table(filename, header=TRUE, sep=",", quote="|", stringsAsFactors=FALSE)
 
-#Write to database
-dbWriteTable(conn=con, name="issue", value=issues, row.names = FALSE, overwrite = TRUE)
-dbSendQuery(con, "alter table issue add Id int auto_increment primary key;")
+#Write issues to database
+ignore<-dbWriteTable(conn=con, name=ISSUE_TBL_NAME, value=issues, row.names = FALSE, overwrite = TRUE)
+ignore<-dbSendQuery(con, paste("ALTER TABLE ",ISSUE_TBL_NAME," ADD Id INT AUTO_INCREMENT PRIMARY KEY;",sep=""))
 
-dbDisconnect(con)
+ignore <- dbDisconnect(con)
