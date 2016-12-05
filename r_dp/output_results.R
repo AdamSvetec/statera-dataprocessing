@@ -15,9 +15,9 @@ if(length(args) > 0){
 }
 
 #Get list of organization's names and their id's
-organizations <- dbGetQuery(con, "SELECT Id, Orgname, total_amount, total_contr FROM ",ORG_TBL_NAME,";")
+organizations <- dbGetQuery(con, paste("SELECT Id, Orgname, total_amount, total_contr FROM ",ORG_TBL_NAME,";",sep=""))
 #Get a list of issue's ids and names
-issues <- dbGetQuery(con, "SELECT issue_shortname, Id FROM ",ISSUE_TBL_NAME,";")
+issues <- dbGetQuery(con, paste("SELECT issue_shortname, Id FROM ",ISSUE_TBL_NAME,";",sep=""))
 
 #Open connection to file
 outputFileConn<-file(filename, "w")
@@ -28,44 +28,50 @@ cat(paste(issues[,"issue_shortname"], collapse=", "), file=outputFileConn, appen
 cat("\n", file=outputFileConn, append=TRUE)
 
 #For a given organization, gather their scores and print them to the file
-print_organization <- function(organization, filename){
-  organization_name <- paste("\"", organization['Orgname'], "\"", sep="")
-  cat(paste(organization_name,organization['total_amount'],organization['total_contr'],"", sep=", "), file=outputFileConn, append=TRUE)
+print_organization <- function(count){
+  organization_name <- paste("\"", organizations[count,'Orgname'], "\"", sep="")
+  cat(paste(organization_name,organizations[count,'total_amount'],organizations[count,'total_contr'],"", sep=", "), file=outputFileConn, append=TRUE)
   scores <- dbGetQuery(con, paste(
     "SELECT score
     FROM ",ORG_SCORE_TBL_NAME,"
-    WHERE org_id = ",organization['Id']," 
+    WHERE org_id = ",organizations[count,'Id']," 
     ORDER BY issue_id;",
     sep=""))
   scores_v <- unlist(scores, recursive = FALSE, use.names = FALSE)
   cat(paste(scores_v, collapse=", "), file=outputFileConn, append=TRUE)
   cat("\n", file=outputFileConn, append=TRUE)
+  progress(count, org_count)
 }
 
 #For each organization, pass this row to score_organization function
-ignore <- apply(organizations, 1, print_organization, filename)
+org_count <- nrow(organizations)
+status(paste("Writing ",org_count," records to results file"))
+ignore <- sapply(1:org_count, print_organization)
 close(outputFileConn)
 
 #Takes each organization and creates a single table with organization and scoring information
-merge_orgs_and_scores <- function(org){
+merge_orgs_and_scores <- function(count){
   org_score <- list()
   scores <- dbGetQuery(con, paste(
     "SELECT score, issue_id
     FROM ",ORG_SCORE_TBL_NAME,"
-    WHERE org_id = ",org['Id'],";",
+    WHERE org_id = ",organizations[count,'Id'],";",
     sep=""))
-  org_score['orgname'] <- org['Orgname']
-  org_score['total_contributions'] <- org['total_amount']
-  org_score['total_contr_number'] <- org['total_contr']
+  org_score['orgname'] <- organizations[count,'Orgname']
+  org_score['total_contributions'] <- organizations[count,'total_amount']
+  org_score['total_contr_number'] <- organizations[count,'total_contr']
   for(i in 1:nrow(scores)){
     org_score[paste('issue_',scores[i,'issue_id'],sep="")] <- scores[i,'score']
   }
   org_score_tbl <- data.frame(org_score)
   ignore <- dbWriteTable(con, name=ORG_SCORE_FINAL_TBL_NAME, value=org_score_tbl, row.names = FALSE, overwrite = FALSE, append = TRUE)
+  progress(count, org_count)
 }
 
 #Create a new table with final results stored in a single table
 ignore <- dbRemoveTable(con, name=ORG_SCORE_FINAL_TBL_NAME)
-ignore <- apply(organizations, 1, merge_orgs_and_scores)
+status(paste("Writing ",org_count," to final results table"))
+ignore <- sapply(1:org_count, merge_orgs_and_scores)
+sapply(1:legislator_count, score_legislator)
 
 ignore <- dbDisconnect(con)

@@ -10,7 +10,7 @@ BILL_TBL_NAME = 'bill'
 VOTE_TBL_NAME = 'vote'
 BILL_SCORE_TBL_NAME = 'bill_score'
 LEG_SCORE_TBL_NAME = 'legislator_score'
-ORG_SCORE_TBL_NAME = 'organization_score'
+ORG_SCORE_TBL_NAME = 'org_score'
 ORG_SCORE_FINAL_TBL_NAME = 'final_org_results'
 
 #Prints string given to it with ending newline and numbers expressed without e notation

@@ -35,20 +35,22 @@ generate_score <- function(organization_id, issue_id){
 }
 
 #Scores a given organization
-score_organization <- function(organization){
+score_organization <- function(count){
   org_scores <- data.frame("org_id"=numeric(),"issue_id"=numeric(),"score"=numeric(), stringsAsFactors=FALSE)
   #For each issue we calculate a score using the generate_score function
   for(issue_id in issue_ids$Id){
-    org_scores[nrow(org_scores)+1,"org_id"] <- organization['Id']
+    org_scores[nrow(org_scores)+1,"org_id"] <- organizations[count,'Id']
     org_scores[nrow(org_scores),"issue_id"] <- issue_id
-    org_scores[nrow(org_scores),"score"] <- generate_score(organization['Id'], issue_id)
+    org_scores[nrow(org_scores),"score"] <- generate_score(organizations[count,'Id'], issue_id)
   }
   ignore <- dbWriteTable(conn=con, name=ORG_SCORE_TBL_NAME, value=org_scores, row.names = FALSE, overwrite = FALSE, append = TRUE)
+  progress(count, org_count)
 }
 
 #Delete the table before recalculating scores
 ignore <- dbRemoveTable(con, name=ORG_SCORE_TBL_NAME)
+org_count <- nrow(organizations)
 #For each organization, pass this row to score_organization()
-ignore <- apply(organizations, 1, score_organization)
+ignore <- sapply(1:org_count, score_organization)
 
 ignore <- dbDisconnect(con)

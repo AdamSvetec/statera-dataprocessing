@@ -19,10 +19,7 @@ generate_score <- function(legislator_id, issue_id){
   leans <- dbGetQuery(con, paste(
     "SELECT y_or_no, score
     FROM ",VOTE_TBL_NAME,", ",BILL_SCORE_TBL_NAME,"
-    WHERE ",VOTE_TBL_NAME,".pol_id = \"",legislator_id,"\" AND ",VOTE_TBL_NAME,".bill_id = ",BILL_SCORE_TBL_NAME,".bill_id AND ",BILL_SCORE_TBL_NAME,".issue_id = ",issue_id," AND EXISTS (
-	    SELECT *
-	    FROM ",BILL_TBL_NAME,"
-	    where ",BILL_TBL_NAME,".vote_id = ",VOTE_TBL_NAME,".bill_id);",sep=""))
+    WHERE ",VOTE_TBL_NAME,".pol_id = \"",legislator_id,"\" AND ",VOTE_TBL_NAME,".bill_id = ",BILL_SCORE_TBL_NAME,".bill_id AND ",BILL_SCORE_TBL_NAME,".issue_id = ",issue_id,";",sep=""))
   if(nrow(leans) == 0){
     return(0)
   }
