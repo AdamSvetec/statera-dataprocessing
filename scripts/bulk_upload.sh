@@ -11,10 +11,11 @@ if [ "$prompt" = "s" ]; then
     basepath="govtrack.us::govtrackdata"
 
     $rsync_command $basepath/congress-legislators/legislators-historic.csv $foldername/
+    $rsync_command $basepath/congress-legislators/legislators-current.csv $foldername/
     $rsync_command --exclude='*.xml' $basepath/congress/114/votes/ $foldername/votes
     $rsync_command --exclude='*.xml' $basepath/congress/113/votes/ $foldername/votes
-    #$rsync_command --exclude='*.xml' $basepath/congress/112/votes/ $foldername/votes
-    #$rsync_command --exclude='*.xml' $basepath/congress/111/votes/ $foldername/votes
+    $rsync_command --exclude='*.xml' $basepath/congress/112/votes/ $foldername/votes
+    $rsync_command --exclude='*.xml' $basepath/congress/111/votes/ $foldername/votes
     #$rsync_command --exclude='*.xml' $basepath/congress/110/votes/ $foldername/votes
     #$rsync_command --exclude='*.xml' $basepath/congress/109/votes/ $foldername/votes
 
