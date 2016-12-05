@@ -2,7 +2,7 @@
 
 #Script for end to end data run
 data_folder="~/BulkData/"
-legislator_file="legislators-historic.csv"
+fortune_n_file="fortune_500.csv"
 bill_scores_file="bill_scores.csv"
 issues_file="issues.csv"
 votes_folder="votes/"
@@ -13,6 +13,12 @@ r_script_folder="../r_dp/"
 read -s -p "Please enter password: " local_pass
 echo ""
 echo "Begining end to end data processing run..."
+
+#Copying user generated data files to data directory
+#Why doesn't this work??
+#cp -s -fn ../extraneous/$issues_file $data_folder$issues_file
+#cp -s -f ~/379SeniorProject/extraneous/$bill_scores_file $data_folder
+#cp -s -f ~/379SeniorProject/extraneous/$fortune_n_file $data_folder
 
 #Data Upload
 echo "Begining data upload"

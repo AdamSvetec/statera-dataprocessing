@@ -1,0 +1,11 @@
+issue_shortname, issue_desc, issue_negative_desc, issue_positive_desc
+|abortion|,|The legality of abortion|,|Tendency to advocate the legalization of abortion.|,|Tendency to oppose abortion and euthanasia.|
+|marriage equality|,|The legality of same sex marriage|,|Tendency to advocate the legalization of same sex marriage.|,|Tendency to oppose the legality of same sex marriage.|
+|capital punishment|,|The legality of the death penalty|,|Tendency to oppose the legality of the death penalty.|,|Tendency to support to legality of the death penalty.|
+|immigration|,|The means of emigrating to America and numbers of immigrants allowed|,|Tendency to support more open borders with easier legal means to become a citizen.|,|Tendency to support closed borders and more rigorous standard for citizenship.|
+|government surveillance|,|The legality and ease of access by federal agencies into personal information|,|Tendency to support a greater privacy of individuals.|,|Tendency to support easier access by federal agencies into personal information.|
+|healthcare|,|Support for public/private healthcare|,|Tendency to support a more public healthcare economy such as a single payer system or free medical care for the old.|,|Tendency to support a privatized healthcare economy.|
+|gun control|,|The legality of gun ownership|,|Tendency to support stricter regulation on the manufacture, sale, transfer, possession, modification, or use of firearms by civilians.|,|Tendency to support looser regulation on the manufacture, sale, transfer, possession, modification, or use of firearms by civilians|
+|taxation|,|Laws or policies related to taxation|,|Tendency to support a more progressive tax rate.|,|Tendency to support a flatter tax rate.|
+|labor unions|,|Laws or policies related to the formation and power of labor unions|,|Tendency to support the creation and bargaining power of labor unions.|,|Tendency to oppose the formation of labor unions and their bargaining power.|
+|environmental regulation|,|Laws and policies related to pollution control and conservation management|,|Tendency to support stricter regulation on pollution and greater levels of conservation.|,|Tendency to support the deregulation of pollution control laws and policies.|
