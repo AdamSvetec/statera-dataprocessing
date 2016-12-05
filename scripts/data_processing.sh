@@ -27,6 +27,9 @@ sudo mysql --password=$local_pass --verbose dataprocessing < ../db_utils/indivs_
 echo "Uploading govtrack voting records"
 $r_command $r_script_folder"voting_upload.R"
 
+#Filter out companies not in fortune 500
+$r_command $r_script_folder"fortune_n_reduce.R"
+
 #Upload Bill Scores
 echo "Uploading user defined bill leans"
 $r_command $r_script_folder"bill_score_upload.R"

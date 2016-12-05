@@ -51,7 +51,7 @@ SET org_id =
     FROM organization
     WHERE organization.Orgname = indiv_to_pol.orgname);
 
-ALTER TABLE indiv_to_pol DROP COLUMN orgname;
+#ALTER TABLE indiv_to_pol DROP COLUMN orgname;
 
 #Direct committee to candidate mappings are done already in data
 #DROP TABLE IF EXISTS committee;
