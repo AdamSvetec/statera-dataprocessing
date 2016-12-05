@@ -57,8 +57,20 @@ for(i in 1:num_files){
     vote['bill_id'] <- bill['vote_id']
     votes[nrow(votes)+1,] <- vote
   }
+  for(nay_vote in voting_record$votes$No){
+    vote['pol_id'] <- nay_vote$id
+    vote['y_or_n'] <- 'n'
+    vote['bill_id'] <- bill['vote_id']
+    votes[nrow(votes)+1,] <- vote
+  }
   #For every yes vote
   for(aye_vote in voting_record$votes$Aye){
+    vote['pol_id'] <- aye_vote$id
+    vote['y_or_n'] <- 'y'
+    vote['bill_id'] <- bill['vote_id']
+    votes[nrow(votes)+1,] <- vote
+  }
+  for(aye_vote in voting_record$votes$Yea){
     vote['pol_id'] <- aye_vote$id
     vote['y_or_n'] <- 'y'
     vote['bill_id'] <- bill['vote_id']
