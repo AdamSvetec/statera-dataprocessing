@@ -1,7 +1,8 @@
 #!/bin/bash
 
 #Script for end to end data run
-data_folder="~/BulkData/"
+data_folder="/home/ubuntu/BulkData/"
+source_folder="/home/ubuntu/379SeniorProject/"
 fortune_n_file="fortune_500.csv"
 bill_scores_file="bill_scores.csv"
 issues_file="issues.csv"
@@ -15,10 +16,9 @@ echo ""
 echo "Begining end to end data processing run..."
 
 #Copying user generated data files to data directory
-#Why doesn't this work??
-#cp -s -fn ../extraneous/$issues_file $data_folder$issues_file
-#cp -s -f ~/379SeniorProject/extraneous/$bill_scores_file $data_folder
-#cp -s -f ~/379SeniorProject/extraneous/$fortune_n_file $data_folder
+cp -fp -- $source_folder"extraneous/"$issues_file $data_folder
+cp -fp -- $source_folder"extraneous/"$bill_scores_file $data_folder
+cp -fp -- $source_folder"extraneous/"$fortune_n_file $data_folder
 
 #Data Upload
 echo "Begining data upload"
