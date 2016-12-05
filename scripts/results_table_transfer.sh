@@ -4,7 +4,7 @@ local_db="dataprocessing"
 web_server_url="ec2-54-212-210-64.us-west-2.compute.amazonaws.com"
 web_server_ip="172.31.34.188"
 remote_db="webserver"
-table_names="final_org_results issue organization organization_score"
+table_names="final_org_results issue organization org_score"
 
 read -s -p "Enter password for local database: " local_pass
 echo ""
