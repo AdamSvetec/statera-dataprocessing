@@ -25,14 +25,21 @@ generate_score <- function(legislator_id, issue_id){
   }
   total_lean <- 0
   #If the legislator voted yes on the bill, add the score, but add the negation of the score if they voted no
+  num_counted <- 0
   for(i in 1:nrow(leans)){
-    if(leans[i,'y_or_no'] == 'y'){
-      total_lean <- total_lean + as.numeric(leans[i,'score'])
-    }else{
-      total_lean <- total_lean - as.numeric(leans[i,'score'])
+    if(leans[i,'score'] != 0){
+      num_counted <- num_counted + 1
+      if(leans[i,'y_or_no'] == 'y'){
+        total_lean <- total_lean + as.numeric(leans[i,'score'])
+      }else{
+        total_lean <- total_lean - as.numeric(leans[i,'score'])
+      }
     }
   }
-  return(total_lean / nrow(leans))
+  if(num_counted == 0){
+    return(0)
+  }
+  return(total_lean / num_counted)
 }
 
 #Takes a given legislator and scores them on each issue

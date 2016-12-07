@@ -1,4 +1,5 @@
 #File for sharing variables, tablenames, etc. between scripts
+DB_GROUP = 'data-processing'
 
 ORG_TBL_NAME = 'organization'
 INDIV_TO_POL_TBL_NAME = 'indiv_to_pol'

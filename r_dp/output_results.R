@@ -72,6 +72,5 @@ merge_orgs_and_scores <- function(count){
 ignore <- dbRemoveTable(con, name=ORG_SCORE_FINAL_TBL_NAME)
 status(paste("Writing ",org_count," to final results table"))
 ignore <- sapply(1:org_count, merge_orgs_and_scores)
-sapply(1:legislator_count, score_legislator)
 
 ignore <- dbDisconnect(con)

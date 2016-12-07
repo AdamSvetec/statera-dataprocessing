@@ -34,6 +34,7 @@ echo "Uploading govtrack voting records"
 $r_command $r_script_folder"voting_upload.R"
 
 #Filter out companies not in fortune 500
+echo "Reducing organizations to fortune 500 companies"
 $r_command $r_script_folder"fortune_n_reduce.R"
 
 #Upload Bill Scores
@@ -48,8 +49,8 @@ $r_command $r_script_folder"legislator_merge.R"
 echo "Scoring legislators"
 $r_command $r_script_folder"legislator_scoring.R"
 echo "Scoring organizations"
-#$r_command $r_script_folder"organization_scoring.R"
-sudo mysql --password=$local_pass --verbose dataprocessing < ../db_utils/org_scoring.sql
+$r_command $r_script_folder"organization_scoring.R"
+#sudo mysql --password=$local_pass --verbose dataprocessing < ../db_utils/org_scoring.sql
 
 #Output results
 echo "Creating results file"

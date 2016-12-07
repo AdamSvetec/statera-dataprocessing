@@ -27,7 +27,7 @@ for(i in 1:length(lines)){
                                           SET Orgname = \"",trimws(names[1]),"\"
                                           WHERE Orgname = \"",trimws(names[j]),"\";",sep=""))
   }
-  progress(i,length(lines))
+  progress(i,2*length(lines))
 }
 
 #Remove all organizations that are not in list
@@ -35,6 +35,7 @@ ignore <- dbWriteTable(con, name="temp_org_names", value=org_names, row.names=FA
 ignore <- dbSendStatement(con, paste("DELETE FROM ",INDIV_TO_POL_TBL_NAME,"
                                       WHERE Orgname NOT IN (SELECT Orgname FROM temp_org_names);",sep=""))
 ignore <- dbRemoveTable(con, name="temp_org_names")
+progress(75,100)
 ignore <- dbRemoveTable(con, name=ORG_TBL_NAME)
 ignore <- dbSendStatement(con, paste("CREATE TABLE ",ORG_TBL_NAME," ( 
                                       Orgname VARCHAR(30), 
@@ -43,8 +44,14 @@ ignore <- dbSendStatement(con, paste("CREATE TABLE ",ORG_TBL_NAME," (
 ignore <- dbSendStatement(con, paste("INSERT INTO ",ORG_TBL_NAME," 
                             SELECT orgname, SUM(Amount), COUNT(*) 
                             FROM ",INDIV_TO_POL_TBL_NAME," 
-                            GROUP BY Orgname;",sep=""))
+                            GROUP BY orgname;",sep=""))
 ignore <- dbSendStatement(con, paste("ALTER TABLE ",ORG_TBL_NAME," ADD Id INT AUTO_INCREMENT PRIMARY KEY;",sep=""))
+progress(85,100)
+ignore <- dbSendStatement(con, paste("UPDATE ",INDIV_TO_POL_TBL_NAME,"                                                                       
+                                      SET org_id = (SELECT Id                                                                            
+                                      FROM ",ORG_TBL_NAME,"                                                                     
+                                      WHERE ",ORG_TBL_NAME,".Orgname = ",INDIV_TO_POL_TBL_NAME,".orgname);",sep=""))
 ignore <- dbSendStatement(con, paste("ALTER TABLE ",INDIV_TO_POL_TBL_NAME," DROP COLUMN orgname;"))
+progress(100,100)
 
-dbDisconnect(con)
+ignore <- dbDisconnect(con)

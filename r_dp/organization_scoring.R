@@ -28,8 +28,13 @@ generate_score <- function(organization_id, issue_id){
   for(i in 1:nrow(leans)){
     amount <- leans[i,'amount']
     lean <- leans[i,'score']
-    total_lean <- total_lean + (lean*amount)
-    total_contributions <- total_contributions + amount
+    if(lean != 0){
+      total_lean <- total_lean + (lean*amount)
+      total_contributions <- total_contributions + amount
+    }
+  }
+  if(total_contributions == 0){
+    return(0)
   }
   return(total_lean / total_contributions)
 }
