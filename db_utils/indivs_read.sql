@@ -5,15 +5,16 @@ CREATE TABLE indiv_to_pol (
 pol_id varchar(10),
 orgname varchar(30),
 amount numeric(10),
-org_id numeric(10)
+org_id numeric(10),
+real_code VARCHAR(1)
 );
 
 LOAD DATA INFILE '/home/ubuntu/BulkData/CampaignFin16/indivs16.txt'
 INTO TABLE indiv_to_pol
 FIELDS TERMINATED BY ','
 ENCLOSED BY '|'
-LINES TERMINATED BY '\n'
-(@dummy,@dummy,@dummy,@dummy,pol_id,orgname,@dummy,@dummy,@dummy,amount,@dummy,@dummy,@dummy,@dummy,@dummy,@dummy,@dummy,@dummy,@dummy,@dummy,@dummy,@dummy,@dummy);
+LINES TERMINATED BY '\r\n'
+(@dummy,@dummy,@dummy,@dummy,pol_id,orgname,@dummy,real_code,@dummy,amount,@dummy,@dummy,@dummy,@dummy,@dummy,@dummy,@dummy,@dummy,@dummy,@dummy,@dummy,@dummy,@dummy);
 
 #Remove unwanted contributions
 DELETE FROM indiv_to_pol
