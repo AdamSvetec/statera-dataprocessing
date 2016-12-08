@@ -17,8 +17,8 @@ generate_score <- function(organization_id, issue_id){
   #Need lean of each politician they contributed to on this specific issue
   leans <- dbGetQuery(con, paste(
     "SELECT amount, score
-    FROM ",INDIV_TO_POL_TBL_NAME,", ",LEG_SCORE_TBL_NAME,"
-    WHERE ",INDIV_TO_POL_TBL_NAME,".org_id = ",organization_id," AND ",LEG_SCORE_TBL_NAME,".issue_id = ",issue_id," AND ",INDIV_TO_POL_TBL_NAME,".pol_id = ",LEG_SCORE_TBL_NAME,".leg_id;",
+    FROM ",CONTR_TBL_NAME,", ",LEG_SCORE_TBL_NAME,"
+    WHERE ",CONTR_TBL_NAME,".org_id = ",organization_id," AND ",LEG_SCORE_TBL_NAME,".issue_id = ",issue_id," AND ",CONTR_TBL_NAME,".pol_id = ",LEG_SCORE_TBL_NAME,".leg_id;",
     sep=""))
   if(nrow(leans) == 0){
     return(0)

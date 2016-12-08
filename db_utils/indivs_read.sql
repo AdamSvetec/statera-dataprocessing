@@ -1,7 +1,7 @@
 #Read in contribution records
-DROP TABLE IF EXISTS indiv_to_pol;
+DROP TABLE IF EXISTS contribution;
 
-CREATE TABLE indiv_to_pol (
+CREATE TABLE contribution (
 pol_id varchar(10),
 orgname varchar(30),
 amount numeric(10),
@@ -10,17 +10,17 @@ real_code VARCHAR(1)
 );
 
 LOAD DATA INFILE '/home/ubuntu/BulkData/CampaignFin16/indivs16.txt'
-INTO TABLE indiv_to_pol
+INTO TABLE contribution
 FIELDS TERMINATED BY ','
 ENCLOSED BY '|'
 LINES TERMINATED BY '\r\n'
 (@dummy,@dummy,@dummy,@dummy,pol_id,orgname,@dummy,real_code,@dummy,amount,@dummy,@dummy,@dummy,@dummy,@dummy,@dummy,@dummy,@dummy,@dummy,@dummy,@dummy,@dummy,@dummy);
 
 #Remove unwanted contributions
-DELETE FROM indiv_to_pol
+DELETE FROM contribution
 WHERE amount <= 0;
 
-DELETE FROM indiv_to_pol
+DELETE FROM contribution
 WHERE orgname IN (
       "", "Retired", "[24T Contribution]"
       );
@@ -36,23 +36,23 @@ total_contr NUMERIC(10)
 
 INSERT INTO organization 
 SELECT Orgname, SUM(Amount), COUNT(*) 
-FROM indiv_to_pol 
+FROM contribution 
 GROUP BY Orgname;
 
 #Create indexes on orgnames to speed up join
 CREATE INDEX org_orgname ON organization (Orgname);
-CREATE INDEX indiv_orgname ON indiv_to_pol (orgname);
+CREATE INDEX indiv_orgname ON contribution (orgname);
 
 ALTER TABLE organization ADD Id INT AUTO_INCREMENT PRIMARY KEY;
 
 #Update contributions with organization's id instead of name
-UPDATE indiv_to_pol
+UPDATE contribution
 SET org_id =
     (SELECT Id
     FROM organization
-    WHERE organization.Orgname = indiv_to_pol.orgname);
+    WHERE organization.Orgname = contribution.orgname);
 
-#ALTER TABLE indiv_to_pol DROP COLUMN orgname;
+#ALTER TABLE contribution DROP COLUMN orgname;
 
 #Direct committee to candidate mappings are done already in data
 #DROP TABLE IF EXISTS committee;

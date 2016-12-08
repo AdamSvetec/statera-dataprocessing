@@ -64,6 +64,6 @@ ignore <- dbSendStatement(con, paste(
   WHERE bill_id NOT IN 
 	  ( SELECT vote_id
 	  FROM ",BILL_TBL_NAME," );",sep=""))
-progress(75,100)
+progress(100,100)
 
 ignore <- dbDisconnect(con)

@@ -1,6 +1,6 @@
 ALTER TABLE legislator_score MODIFY leg_id varchar(10);
 CREATE INDEX IF NOT EXISTS legislator_score_leg ON legislator_score (leg_id);
-CREATE INDEX IF NOT EXISTS indiv_pol_id ON indiv_to_pol (pol_id);
+CREATE INDEX IF NOT EXISTS indiv_pol_id ON contribution (pol_id);
 
 DROP TABLE IF EXISTS org_score;
 
@@ -17,6 +17,6 @@ FROM organization, issue;
 
 REPLACE INTO org_score 
 SELECT org_id, issue_id, (sum(score*amount))/(count(amount)*sum(amount))
-FROM legislator_score, indiv_to_pol
-WHERE indiv_to_pol.pol_id = legislator_score.leg_id
-GROUP BY indiv_to_pol.org_id, legislator_score.issue_id;
+FROM legislator_score, contribution
+WHERE contribution.pol_id = legislator_score.leg_id
+GROUP BY contribution.org_id, legislator_score.issue_id;

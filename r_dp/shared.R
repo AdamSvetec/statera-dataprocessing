@@ -2,7 +2,7 @@
 DB_GROUP = 'data-processing'
 
 ORG_TBL_NAME = 'organization'
-INDIV_TO_POL_TBL_NAME = 'indiv_to_pol'
+CONTR_TBL_NAME = 'contribution'
 ISSUE_TBL_NAME = 'issue'
 LEG_GOVTRACK_TBL_NAME = 'legislator_govtrack'
 LEG_OPENSECRETS_TBL_NAME = 'legislator_opensecrets'
