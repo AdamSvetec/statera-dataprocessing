@@ -27,7 +27,7 @@ $r_command $r_script_folder"issues_upload.R"
 echo "Uploading legislators from govtrack"
 $r_command $r_script_folder"legislator_upload.R"
 echo "Uploading opensecrets legislator data" 
-$r_command $r_script_folder"upload_CF16.R"
+$r_command $r_script_folder"campaignfin16_upload.R"
 echo "Uploading opensecrets contribution data"
 sudo mysql --password=$local_pass --verbose dataprocessing < ../db_utils/indivs_read.sql
 echo "Uploading govtrack voting records"
