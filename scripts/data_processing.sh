@@ -9,7 +9,7 @@ issues_file="issues.csv"
 votes_folder="votes/"
 cf16_folder="CampaignFin16/"
 r_command="R --vanilla -q --slave -f"
-r_script_folder="../r_dp/"
+r_script_folder=$source_folder"r_dp/"
 
 read -s -p "Please enter password: " local_pass
 echo ""
