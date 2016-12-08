@@ -15,9 +15,9 @@ if(length(args) > 0){
 }
 
 #Get list of organization's names and their id's
-organizations <- dbGetQuery(con, paste("SELECT Id, Orgname, total_amount, total_contr FROM ",ORG_TBL_NAME,";",sep=""))
+organizations <- dbGetQuery(con, paste("SELECT Id, Orgname, total_amount, total_contr FROM ",ORG_TBL,";",sep=""))
 #Get a list of issue's ids and names
-issues <- dbGetQuery(con, paste("SELECT issue_shortname, Id FROM ",ISSUE_TBL_NAME,";",sep=""))
+issues <- dbGetQuery(con, paste("SELECT issue_shortname, Id FROM ",ISSUE_TBL,";",sep=""))
 
 #Open connection to file
 outputFileConn<-file(filename, "w")
@@ -33,7 +33,7 @@ print_organization <- function(count){
   cat(paste(organization_name,organizations[count,'total_amount'],organizations[count,'total_contr'],"", sep=", "), file=outputFileConn, append=TRUE)
   scores <- dbGetQuery(con, paste(
     "SELECT score
-    FROM ",ORG_SCORE_TBL_NAME,"
+    FROM ",ORG_SCORE_TBL,"
     WHERE org_id = ",organizations[count,'Id']," 
     ORDER BY issue_id;",
     sep=""))
@@ -54,7 +54,7 @@ merge_orgs_and_scores <- function(count){
   org_score <- list()
   scores <- dbGetQuery(con, paste(
     "SELECT score, issue_id
-    FROM ",ORG_SCORE_TBL_NAME,"
+    FROM ",ORG_SCORE_TBL,"
     WHERE org_id = ",organizations[count,'Id'],";",
     sep=""))
   org_score['orgname'] <- organizations[count,'Orgname']
@@ -64,12 +64,12 @@ merge_orgs_and_scores <- function(count){
     org_score[paste('issue_',scores[i,'issue_id'],sep="")] <- scores[i,'score']
   }
   org_score_tbl <- data.frame(org_score)
-  ignore <- dbWriteTable(con, name=ORG_SCORE_FINAL_TBL_NAME, value=org_score_tbl, row.names = FALSE, overwrite = FALSE, append = TRUE)
+  ignore <- dbWriteTable(con, name=ORG_SCORE_FINAL_TBL, value=org_score_tbl, row.names = FALSE, overwrite = FALSE, append = TRUE)
   progress(count, org_count)
 }
 
 #Create a new table with final results stored in a single table
-ignore <- dbRemoveTable(con, name=ORG_SCORE_FINAL_TBL_NAME)
+ignore <- dbRemoveTable(con, name=ORG_SCORE_FINAL_TBL)
 status(paste("Writing ",org_count," to final results table"))
 ignore <- sapply(1:org_count, merge_orgs_and_scores)
 

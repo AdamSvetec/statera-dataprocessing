@@ -19,7 +19,7 @@ if(length(args) > 0){
 issues <- read.table(filename, header=TRUE, sep=",", quote="|", stringsAsFactors=FALSE)
 
 #Write issues to database
-ignore<-dbWriteTable(conn=con, name=ISSUE_TBL_NAME, value=issues, row.names = FALSE, overwrite = TRUE)
-ignore<-dbSendQuery(con, paste("ALTER TABLE ",ISSUE_TBL_NAME," ADD Id INT AUTO_INCREMENT PRIMARY KEY;",sep=""))
+ignore<-dbWriteTable(conn=con, name=ISSUE_TBL, value=issues, row.names = FALSE, overwrite = TRUE)
+ignore<-dbSendQuery(con, paste("ALTER TABLE ",ISSUE_TBL," ADD Id INT AUTO_INCREMENT PRIMARY KEY;",sep=""))
 
 ignore <- dbDisconnect(con)

@@ -31,7 +31,7 @@ legislators <- read.table(legislators_file, header=FALSE, sep=",", quote = '|', 
 legislators <- subset(legislators, select = c('Cycle', 'CID', 'FirstLastP', 'Party', 'DistIDRunFor'))
 
 #Upload legislators table to database
-ignore<-dbWriteTable(conn=con, name=LEG_OPENSECRETS_TBL_NAME, value=legislators, row.names = FALSE, overwrite = TRUE)
+ignore<-dbWriteTable(conn=con, name=LEG_OPENSECRETS_TBL, value=legislators, row.names = FALSE, overwrite = TRUE)
 rm(legislators)
 
 #Because of enourmous file size, these operations on indivs16.txt are done entirely in SQL

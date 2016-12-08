@@ -1,18 +1,18 @@
 #File for sharing variables, tablenames, etc. between scripts
 DB_GROUP = 'data-processing'
 
-ORG_TBL_NAME = 'organization'
-CONTR_TBL_NAME = 'contribution'
-ISSUE_TBL_NAME = 'issue'
-LEG_GOVTRACK_TBL_NAME = 'legislator_govtrack'
-LEG_OPENSECRETS_TBL_NAME = 'legislator_opensecrets'
-LEG_FINAL_TBL_NAME = 'legislator'
-BILL_TBL_NAME = 'bill'
-VOTE_TBL_NAME = 'vote'
-BILL_SCORE_TBL_NAME = 'bill_score'
-LEG_SCORE_TBL_NAME = 'legislator_score'
-ORG_SCORE_TBL_NAME = 'org_score'
-ORG_SCORE_FINAL_TBL_NAME = 'final_org_results'
+ORG_TBL = 'organization'
+CONTR_TBL = 'contribution'
+ISSUE_TBL = 'issue'
+LEG_GOVTRACK_TBL = 'legislator_govtrack'
+LEG_OPENSECRETS_TBL = 'legislator_opensecrets'
+LEG_FINAL_TBL = 'legislator'
+BILL_TBL = 'bill'
+VOTE_TBL = 'vote'
+BILL_SCORE_TBL = 'bill_score'
+LEG_SCORE_TBL = 'legislator_score'
+ORG_SCORE_TBL = 'org_score'
+ORG_SCORE_FINAL_TBL = 'final_org_results'
 
 #Prints string given to it with ending newline and numbers expressed without e notation
 status <- function(str){

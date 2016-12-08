@@ -29,6 +29,6 @@ legislators_current = subset(legislators_current, select = filter)
 legislators_historic = legislators_historic[legislators_historic$opensecrets_id != "",]
 
 #Upload legislators table to database
-ignore <- dbWriteTable(conn=con, name=LEG_GOVTRACK_TBL_NAME, value=legislators_historic, row.names=FALSE, overwrite=TRUE)
-ignore <- dbWriteTable(conn=con, name=LEG_GOVTRACK_TBL_NAME, value=legislators_current, row.names=FALSE, overwrite=FALSE, append=TRUE)
+ignore <- dbWriteTable(conn=con, name=LEG_GOVTRACK_TBL, value=legislators_historic, row.names=FALSE, overwrite=TRUE)
+ignore <- dbWriteTable(conn=con, name=LEG_GOVTRACK_TBL, value=legislators_current, row.names=FALSE, overwrite=FALSE, append=TRUE)
 ignore <- dbDisconnect(con)

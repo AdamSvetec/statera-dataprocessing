@@ -23,8 +23,8 @@ filenames <- list.files(foldername, pattern="*.json", full.names=TRUE, recursive
 library(rjson)
 
 #Establish database connection and clear bills and votes table
-ignore<-dbRemoveTable(conn=con, name=BILL_TBL_NAME)
-ignore<-dbRemoveTable(conn=con, name=VOTE_TBL_NAME)
+ignore<-dbRemoveTable(conn=con, name=BILL_TBL)
+ignore<-dbRemoveTable(conn=con, name=VOTE_TBL)
 
 num_files <- length(filenames)
 status(paste("Uploading",num_files,"bills and respective voting records"))
@@ -45,7 +45,7 @@ for(i in 1:num_files){
   bill['vote_id'] <- voting_record['vote_id']
   bills <- data.frame(bill)
   #Write bill objects to database
-  ignore <- dbWriteTable(conn=con, name=BILL_TBL_NAME, value=bills, row.names = FALSE, overwrite = FALSE, append = TRUE)
+  ignore <- dbWriteTable(conn=con, name=BILL_TBL, value=bills, row.names = FALSE, overwrite = FALSE, append = TRUE)
 
   #Read voting records for given bill and insert them into the database
   vote <- c()
@@ -78,7 +78,7 @@ for(i in 1:num_files){
   }
   
   #Write voting records to database
-  ignore <- dbWriteTable(conn=con, name=VOTE_TBL_NAME, value=votes, row.names = FALSE, overwrite = FALSE, append = TRUE)
+  ignore <- dbWriteTable(conn=con, name=VOTE_TBL, value=votes, row.names = FALSE, overwrite = FALSE, append = TRUE)
   progress(i, num_files)
 }
 

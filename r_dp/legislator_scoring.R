@@ -8,9 +8,9 @@ library(RMySQL)
 con <- dbConnect(RMySQL::MySQL(),group="data-processing")
 
 #Get's a list of all legislator id's to score
-legislator_table <- dbGetQuery(con, paste("SELECT bioguide_id, opensecrets_id FROM ",LEG_FINAL_TBL_NAME,";",sep=""))
+legislator_table <- dbGetQuery(con, paste("SELECT bioguide_id, opensecrets_id FROM ",LEG_FINAL_TBL,";",sep=""))
 #Get's a list of all issue id's
-issue_ids <- dbGetQuery(con, paste("SELECT Id FROM ",ISSUE_TBL_NAME," GROUP BY Id",sep=""))
+issue_ids <- dbGetQuery(con, paste("SELECT Id FROM ",ISSUE_TBL," GROUP BY Id",sep=""))
 
 #Generates a score for a given legislator and issue
 generate_score <- function(legislator_id, issue_id){
@@ -18,8 +18,8 @@ generate_score <- function(legislator_id, issue_id){
   #TODO: can this be optimized better?
   leans <- dbGetQuery(con, paste(
     "SELECT y_or_no, score
-    FROM ",VOTE_TBL_NAME,", ",BILL_SCORE_TBL_NAME,"
-    WHERE ",VOTE_TBL_NAME,".pol_id = \"",legislator_id,"\" AND ",VOTE_TBL_NAME,".bill_id = ",BILL_SCORE_TBL_NAME,".bill_id AND ",BILL_SCORE_TBL_NAME,".issue_id = ",issue_id,";",sep=""))
+    FROM ",VOTE_TBL,", ",BILL_SCORE_TBL,"
+    WHERE ",VOTE_TBL,".pol_id = \"",legislator_id,"\" AND ",VOTE_TBL,".bill_id = ",BILL_SCORE_TBL,".bill_id AND ",BILL_SCORE_TBL,".issue_id = ",issue_id,";",sep=""))
   if(nrow(leans) == 0){
     return(0)
   }
@@ -51,12 +51,12 @@ score_legislator <- function(counter){
     leg_scores[nrow(leg_scores),"issue_id"] <- issue_id
     leg_scores[nrow(leg_scores),"score"] <- generate_score(legislator['bioguide_id'], issue_id)
   }
-  ignore <- dbWriteTable(conn=con, name=LEG_SCORE_TBL_NAME, value=leg_scores, row.names = FALSE, overwrite = FALSE, append = TRUE)
+  ignore <- dbWriteTable(conn=con, name=LEG_SCORE_TBL, value=leg_scores, row.names = FALSE, overwrite = FALSE, append = TRUE)
   progress(counter, legislator_count)
 }
 
 #Removes the table from the database before recalculating
-ignore<-dbRemoveTable(con, name=LEG_SCORE_TBL_NAME)
+ignore<-dbRemoveTable(con, name=LEG_SCORE_TBL)
 legislator_count <- nrow(legislator_table)
 status(paste("Scoring",legislator_count,"legislators"))
 #Calculates score for each legislator and each issue

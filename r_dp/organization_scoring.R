@@ -8,17 +8,17 @@ library(RMySQL)
 con <- dbConnect(RMySQL::MySQL(),group="data-processing")
 
 #Get list of all organization's id's
-organizations <- dbGetQuery(con, paste("SELECT Id FROM ",ORG_TBL_NAME,";",sep=""))
+organizations <- dbGetQuery(con, paste("SELECT Id FROM ",ORG_TBL,";",sep=""))
 #Get list of all issues to analyze
-issue_ids <- dbGetQuery(con, paste("SELECT Id FROM ",ISSUE_TBL_NAME," GROUP BY Id",sep=""))
+issue_ids <- dbGetQuery(con, paste("SELECT Id FROM ",ISSUE_TBL," GROUP BY Id",sep=""))
 
 #Generates a score for a given organization and issue
 generate_score <- function(organization_id, issue_id){
   #Need lean of each politician they contributed to on this specific issue
   leans <- dbGetQuery(con, paste(
     "SELECT amount, score
-    FROM ",CONTR_TBL_NAME,", ",LEG_SCORE_TBL_NAME,"
-    WHERE ",CONTR_TBL_NAME,".org_id = ",organization_id," AND ",LEG_SCORE_TBL_NAME,".issue_id = ",issue_id," AND ",CONTR_TBL_NAME,".pol_id = ",LEG_SCORE_TBL_NAME,".leg_id;",
+    FROM ",CONTR_TBL,", ",LEG_SCORE_TBL,"
+    WHERE ",CONTR_TBL,".org_id = ",organization_id," AND ",LEG_SCORE_TBL,".issue_id = ",issue_id," AND ",CONTR_TBL,".pol_id = ",LEG_SCORE_TBL,".leg_id;",
     sep=""))
   if(nrow(leans) == 0){
     return(0)
@@ -48,12 +48,12 @@ score_organization <- function(count){
     org_scores[nrow(org_scores),"issue_id"] <- issue_id
     org_scores[nrow(org_scores),"score"] <- generate_score(organizations[count,'Id'], issue_id)
   }
-  ignore <- dbWriteTable(conn=con, name=ORG_SCORE_TBL_NAME, value=org_scores, row.names = FALSE, overwrite = FALSE, append = TRUE)
+  ignore <- dbWriteTable(conn=con, name=ORG_SCORE_TBL, value=org_scores, row.names = FALSE, overwrite = FALSE, append = TRUE)
   progress(count, org_count)
 }
 
 #Delete the table before recalculating scores
-ignore <- dbRemoveTable(con, name=ORG_SCORE_TBL_NAME)
+ignore <- dbRemoveTable(con, name=ORG_SCORE_TBL)
 org_count <- nrow(organizations)
 #For each organization, pass this row to score_organization()
 ignore <- sapply(1:org_count, score_organization)

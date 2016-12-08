@@ -25,7 +25,7 @@ if(issue_names[1] != "id"){
 }
 id_numbers <- c(-1)
 for(i in 2:length(issue_names)){
-  result <- dbGetQuery(con, paste("SELECT Id FROM ",ISSUE_TBL_NAME," WHERE issue_shortname=\"", gsub("."," ",issue_names[i], fixed = TRUE),"\"", sep=""))
+  result <- dbGetQuery(con, paste("SELECT Id FROM ",ISSUE_TBL," WHERE issue_shortname=\"", gsub("."," ",issue_names[i], fixed = TRUE),"\"", sep=""))
   if(length(result$Id) == 0){
     stop("bill score header not found in database")  
   }
@@ -40,30 +40,30 @@ bill_score_upload <- function(count){
     scores_frame[i-1,"issue_id"] <- id_numbers[i]
     scores_frame[i-1,"score"] <- bill_scores[count, i]
   }
-  ignore <- dbWriteTable(conn=con, name=BILL_SCORE_TBL_NAME, value=scores_frame, row.names = FALSE, overwrite = FALSE, append = TRUE)
+  ignore <- dbWriteTable(conn=con, name=BILL_SCORE_TBL, value=scores_frame, row.names = FALSE, overwrite = FALSE, append = TRUE)
   rm(scores_frame)
   progress(count, 2*n_bills_scored)
 }
 
 #For every bill insert it's scores
-ignore <- dbRemoveTable(conn=con, name=BILL_SCORE_TBL_NAME)
+ignore <- dbRemoveTable(conn=con, name=BILL_SCORE_TBL)
 n_bills_scored <- nrow(bill_scores)
 status(paste("Uploading scores from ",n_bills_scored," bills"))
 ignore <- sapply(1:n_bills_scored, bill_score_upload)
 
 #Delete all bills that are not analyzed to allow for faster scoring
 ignore <- dbSendStatement(con, paste( 
-  "DELETE FROM ",BILL_TBL_NAME," 
+  "DELETE FROM ",BILL_TBL," 
   WHERE vote_id NOT IN 
 	  ( SELECT bill_id
-	  FROM ",BILL_SCORE_TBL_NAME,");",sep=""))
+	  FROM ",BILL_SCORE_TBL,");",sep=""))
 progress(75,100)
 #Delete all votes for bills that are not analyzed to allow for faster scoring
 ignore <- dbSendStatement(con, paste(
-  "DELETE FROM ",VOTE_TBL_NAME,"
+  "DELETE FROM ",VOTE_TBL,"
   WHERE bill_id NOT IN 
 	  ( SELECT vote_id
-	  FROM ",BILL_TBL_NAME," );",sep=""))
+	  FROM ",BILL_TBL," );",sep=""))
 progress(100,100)
 
 ignore <- dbDisconnect(con)
