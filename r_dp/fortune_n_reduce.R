@@ -19,6 +19,7 @@ lines <-readLines(file_conn)
 org_names = data.frame()
 close(file_conn)
 status(paste("Slimming organizations to ",length(lines)," count"))
+dp_log(paste("Slimming organizations to ",length(lines)," count"))
 for(i in 1:length(lines)){
   names <- unlist(strsplit(lines[i], split=","))
   org_names[nrow(org_names)+1,'Orgname'] <- trimws(names[1])

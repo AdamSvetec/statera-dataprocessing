@@ -49,6 +49,7 @@ bill_score_upload <- function(count){
 ignore <- dbRemoveTable(conn=con, name=BILL_SCORE_TBL)
 n_bills_scored <- nrow(bill_scores)
 status(paste("Uploading scores from ",n_bills_scored," bills"))
+dp_log(paste("Parsing scores from ",n_bills_scored," bills"))
 ignore <- sapply(1:n_bills_scored, bill_score_upload)
 
 #Delete all bills that are not analyzed to allow for faster scoring

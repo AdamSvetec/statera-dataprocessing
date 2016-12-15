@@ -28,6 +28,7 @@ ignore<-dbRemoveTable(conn=con, name=VOTE_TBL)
 
 num_files <- length(filenames)
 status(paste("Uploading",num_files,"bills and respective voting records"))
+dp_log(paste("Parsing",num_files,"bills and respective voting records"))
 #For every data.json file in the votes directory
 for(i in 1:num_files){
   #Read in json file into voting_record object

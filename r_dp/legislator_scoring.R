@@ -59,6 +59,7 @@ score_legislator <- function(counter){
 ignore<-dbRemoveTable(con, name=LEG_SCORE_TBL)
 legislator_count <- nrow(legislator_table)
 status(paste("Scoring",legislator_count,"legislators"))
+dp_log(paste("Scoring",legislator_count,"legislators"))
 #Calculates score for each legislator and each issue
 ignore <- sapply(1:legislator_count, score_legislator)
 

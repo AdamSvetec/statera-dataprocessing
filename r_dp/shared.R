@@ -13,6 +13,11 @@ BILL_SCORE_TBL = 'bill_score'
 LEG_SCORE_TBL = 'legislator_score'
 ORG_SCORE_TBL = 'org_score'
 ORG_SCORE_FINAL_TBL = 'final_org_results'
+METRIC_RESULTS_TBL = 'metric_result'
+
+data_path = '/home/ubuntu/BulkData/'
+source_path = '/home/ubuntu/379SeniorProject/'
+log_file = paste(source_path,'log/data_processing.log',sep="")
 
 #Prints string given to it with ending newline and numbers expressed without e notation
 status <- function(str){
@@ -29,4 +34,9 @@ progress <- function (current, max = 100) {
               floor(percent)))
   if (current >= max)
     cat('\n')
+}
+
+dp_log <- function (str){
+  #file.create(log_file, showWarnings = TRUE, overwrite=FALSE)
+  write(paste(format(Sys.time(), "%a %b %d %X %Y")," | ",str), file = log_file, append = TRUE)
 }
