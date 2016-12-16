@@ -20,6 +20,10 @@ cp -fp -- $source_folder"extraneous/"$issues_file $data_folder
 cp -fp -- $source_folder"extraneous/"$bill_scores_file $data_folder
 cp -fp -- $source_folder"extraneous/"$fortune_n_file $data_folder
 
+#Preliminary
+echo "Performing preliminary check"
+$r_command $r_script_folder"preliminary.R"
+
 #Data Upload
 echo "Begining data upload"
 echo "Uploading user defined issues"
@@ -55,3 +59,7 @@ $r_command $r_script_folder"organization_scoring.R"
 #Output results
 echo "Creating results file"
 $r_command $r_script_folder"output_results.R"
+
+#Collect Metrics
+echo "Collecting Metrics"
+$r_command $r_script_folder"overall_metric_score.R"
