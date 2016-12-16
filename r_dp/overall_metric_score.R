@@ -10,6 +10,8 @@ con <- dbConnect(RMySQL::MySQL(), group="data-processing")
 #Get's a list of all issues
 issues <- dbGetQuery(con, paste("SELECT * FROM ",ISSUE_TBL,";",sep=""))
 
+dp_log("Metric results")
+
 issue_results <- data.frame()
 for(i in 1:nrow(issues)){
   issue <- issues[i,]
@@ -19,6 +21,7 @@ for(i in 1:nrow(issues)){
   issue_results[nrow(issue_results),'stddev_score'] <- results$stddev;
   issue_results[nrow(issue_results),'date'] <- Sys.Date()
   print(paste("Issue: ",issue['issue_shortname']," | avg score: ",results$average," | std dev: ",results$stddev))
+  dp_log(paste("Issue: ",issue['issue_shortname']," | avg score: ",results$average," | std dev: ",results$stddev))
 }
 
 ignore <- dbWriteTable(con, name=METRIC_RESULTS_TBL, value=issue_results, append=TRUE,row.names=FALSE)
